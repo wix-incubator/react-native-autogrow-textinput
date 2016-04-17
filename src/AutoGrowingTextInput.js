@@ -24,18 +24,14 @@ export default class AutoGrowingTextInput extends React.Component {
   }
 
   _onChangeNativeEvent(nativeEvent) {
-    if(nativeEvent.contentSize) {
-      const newHeight = this.props.autoGrowing ? nativeEvent.contentSize.height : this.state.height;
-      this.setState({
-        text: nativeEvent.text,
-        height: newHeight
-      });
+    let newHeight = this.state.height;
+    if(nativeEvent.contentSize && this.props.autoGrowing) {
+      newHeight = nativeEvent.contentSize.height;
     }
-    else {
-      this.setState({
-        text: nativeEvent.text
-      });
-    }
+    this.setState({
+      text: nativeEvent.text,
+      height: newHeight
+    });
   }
 }
 
