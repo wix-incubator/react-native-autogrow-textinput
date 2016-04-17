@@ -1,5 +1,5 @@
 # react-native-autogrow-textinput
-A helper component meant to be used as a drop-in replacement for RN TextInput 
+A helper component meant to be used as a drop-in replacement for RN TextInput to allow automatic expanding of a multi-line text input according to the number of lines
 
 ## Installation
 
