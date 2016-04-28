@@ -11,17 +11,18 @@ export default class AutoGrowingTextInput extends React.Component {
     super(props);
     this.state = {height: 0};
   }
-
+  
   render() {
     return (
-        <TextInput {...this.props} {...this.style}
-                   style={[this.props.style, {height: Math.min(this.props.maxHeight, Math.max(this.props.minHeight, this.state.height))}]}
-                   multiline={true}
-                   onChange={(event) => this._onChangeNativeEvent(event.nativeEvent)}
-        />
+      <TextInput {...this.props} {...this.style}
+        style={[this.props.style, {height: Math.min(this.props.maxHeight, Math.max(this.props.minHeight, this.state.height))}]}
+        multiline={true}
+        onChange={(event) => this._onChangeNativeEvent(event.nativeEvent)}
+        ref={(r) => { this._textInput = r; }}
+      />
     );
   }
-
+  
   _onChangeNativeEvent(nativeEvent) {
     let newHeight = this.state.height;
     if(nativeEvent.contentSize && this.props.autoGrowing) {
@@ -33,6 +34,10 @@ export default class AutoGrowingTextInput extends React.Component {
     this.setState({
       height: newHeight
     });
+  }
+  
+  setNativeProps(nativeProps = {}) {
+    this._textInput.setNativeProps(nativeProps);
   }
 }
 
