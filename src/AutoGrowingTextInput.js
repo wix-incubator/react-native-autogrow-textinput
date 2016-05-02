@@ -39,6 +39,12 @@ export default class AutoGrowingTextInput extends React.Component {
   setNativeProps(nativeProps = {}) {
     this._textInput.setNativeProps(nativeProps);
   }
+
+  resetHeightToMin() {
+    this.setState({
+      height: this.props.minHeight
+    });
+  }
 }
 
 AutoGrowingTextInput.propTypes = {

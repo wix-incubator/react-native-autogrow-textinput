@@ -8,7 +8,8 @@ import React, {
   Component,
   StyleSheet,
   Text,
-  View
+  View,
+  TouchableOpacity
 } from 'react-native';
 
 import {AutoGrowingTextInput} from 'react-native-autogrow-textinput';
@@ -20,9 +21,17 @@ class example extends Component {
         <Text style={styles.welcome}>
           Auto Growing TextInput Example
         </Text>
-        <AutoGrowingTextInput style={styles.textInput} placeholder={'Your Message'} />
+        <AutoGrowingTextInput style={styles.textInput} placeholder={'Your Message'} ref={(r) => { this._textInput = r; }}/>
+        <TouchableOpacity style={styles.button} onPress={() => this._resetTextInput()}>
+          <Text>Clear</Text>
+        </TouchableOpacity>
       </View>
     );
+  }
+
+  _resetTextInput() {
+    this._textInput.setNativeProps({text: ''});
+    this._textInput.resetHeightToMin();
   }
 }
 
@@ -47,6 +56,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderWidth: 0,
     borderRadius: 4
+  },
+  button: {
+    alignItems: 'center',
+    width: 100,
+    height: 80,
+    marginTop: 50
   }
 });
 
