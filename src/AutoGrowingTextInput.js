@@ -11,7 +11,13 @@ export default class AutoGrowingTextInput extends React.Component {
     super(props);
     this.state = {height: 0};
   }
-  
+
+  componentWillReceiveProps(newProps) {
+    if (newProps.hasOwnProperty('value') && !newProps.value) {
+      this.resetHeightToMin();
+    }
+  }
+
   render() {
     return (
       <TextInput {...this.props} {...this.style}
