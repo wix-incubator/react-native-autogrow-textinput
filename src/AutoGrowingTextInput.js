@@ -34,7 +34,7 @@ export default class AutoGrowingTextInput extends React.Component {
     if(nativeEvent.contentSize && this.props.autoGrowing) {
       newHeight = nativeEvent.contentSize.height;
       if(this.state.height !== newHeight && this.props.onHeightChanged) {
-        this.props.onHeightChanged();
+        this.props.onHeightChanged(newHeight, newHeight - this.state.height);
       }
     }
     this.setState({
