@@ -39,7 +39,7 @@ export default class AutoGrowingTextInput extends React.Component {
       }
     }
     
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    LayoutAnimation.configureNext({...LayoutAnimation.Presets.easeInEaseOut, duration: 100});
     this.setState({
       height: newHeight
     });
