@@ -3,7 +3,8 @@ import React, {
   View,
   TextInput,
   StyleSheet,
-  PropTypes
+  PropTypes,
+  LayoutAnimation,
 } from 'react-native';
 
 export default class AutoGrowingTextInput extends React.Component {
@@ -37,6 +38,8 @@ export default class AutoGrowingTextInput extends React.Component {
         this.props.onHeightChanged(newHeight, this.state.height, newHeight - this.state.height);
       }
     }
+    
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     this.setState({
       height: newHeight
     });
