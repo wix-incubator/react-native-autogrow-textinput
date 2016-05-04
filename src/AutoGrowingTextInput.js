@@ -12,7 +12,7 @@ const DEFAULT_ANIM_DURATION = 100;
 export default class AutoGrowingTextInput extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {height: 0};
+    this.state = {height: this._getValidHeight(props.initialHeight)};
   }
 
   componentWillReceiveProps(newProps) {
@@ -25,11 +25,15 @@ export default class AutoGrowingTextInput extends React.Component {
     return (
       <TextInput multiline={true}
         {...this.props} {...this.style}
-                 style={[this.props.style, {height: Math.min(this.props.maxHeight, Math.max(this.props.minHeight, this.state.height))}]}
+                 style={[this.props.style, {height: this._getValidHeight(this.state.height)}]}
                  onChange={(event) => this._onChangeNativeEvent(event.nativeEvent)}
                  ref={(r) => { this._textInput = r; }}
       />
     );
+  }
+
+  _getValidHeight(height) {
+    return Math.min(this.props.maxHeight, Math.max(this.props.minHeight, height));
   }
 
   _onChangeNativeEvent(nativeEvent) {
@@ -64,14 +68,16 @@ export default class AutoGrowingTextInput extends React.Component {
 
 AutoGrowingTextInput.propTypes = {
   autoGrowing: PropTypes.bool,
+  initialHeight: PropTypes.number,
   minHeight: PropTypes.number,
   maxHeight: PropTypes.number,
   onHeightChanged: PropTypes.func,
-  animation: PropTypes.object
+  animation: PropTypes.object,
 };
 AutoGrowingTextInput.defaultProps = {
   autoGrowing: true,
   minHeight: 35,
+  initialHeight: 35,
   maxHeight: 200,
   animation: {animated: false, duration: DEFAULT_ANIM_DURATION}
 };
