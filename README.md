@@ -8,6 +8,10 @@ Install using `npm`:
 npm i react-native-autogrow-textinput --save
 ```
 
+#### Native side installation
+
+To fix the [issue](https://github.com/wix/react-native-autogrow-textinput/issues/1) with the height not being set for initial values (or with other cases where the input is not set by the user typing using the keyboard) you need to add the `libAutoGrowTextInput` to your project. After performing `npm install`, locate `AutoGrowTextInput.xcodeproj` in `YOUR_PROJECT/node_modules/react-native-autogrow-textinput/ios` and drag it to your own project, then in your target's general settings, add it to the "Linked Frameworks and Libraries".
+
 ## How To Use
 Import the new component:
 
