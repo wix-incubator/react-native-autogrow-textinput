@@ -46,7 +46,7 @@ export default class AutoGrowingTextInput extends React.Component {
     }
 
     if (this.props.animation.animated) {
-      const duration = this.props.animation.duration | DEFAULT_ANIM_DURATION;
+      const duration = this.props.animation.duration || DEFAULT_ANIM_DURATION;
       LayoutAnimation.configureNext({...LayoutAnimation.Presets.easeInEaseOut, duration: duration});
     }
 
