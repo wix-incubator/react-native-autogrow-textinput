@@ -5,7 +5,10 @@ import React, {
   StyleSheet,
   PropTypes,
   LayoutAnimation,
+  NativeModules
 } from 'react-native';
+
+var AutoGrowTextInputManager = NativeModules.AutoGrowTextInputManager;
 
 const DEFAULT_ANIM_DURATION = 100;
 
@@ -13,11 +16,9 @@ export default class AutoGrowingTextInput extends React.Component {
   constructor(props) {
     super(props);
     this.state = {height: this._getValidHeight(props.initialHeight)};
-  }
-
-  componentWillReceiveProps(newProps) {
-    if (newProps.hasOwnProperty('value') && !newProps.value) {
-      this.resetHeightToMin();
+    //using a native fix for "onChange" not received when the text is set pragmatically and not by the user (https://github.com/wix/react-native-autogrow-textinput/issues/1)
+    if(AutoGrowTextInputManager) {
+      AutoGrowTextInputManager.setupNotifyChangeOnSetText();
     }
   }
 
@@ -72,7 +73,7 @@ AutoGrowingTextInput.propTypes = {
   minHeight: PropTypes.number,
   maxHeight: PropTypes.number,
   onHeightChanged: PropTypes.func,
-  animation: PropTypes.object,
+  animation: PropTypes.object
 };
 AutoGrowingTextInput.defaultProps = {
   autoGrowing: true,

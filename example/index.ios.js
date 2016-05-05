@@ -31,7 +31,6 @@ class example extends Component {
 
   _resetTextInput() {
     this._textInput.setNativeProps({text: ''});
-    this._textInput.resetHeightToMin();
   }
 }
 
