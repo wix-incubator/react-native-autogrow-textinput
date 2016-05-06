@@ -32,8 +32,11 @@ RCT_EXPORT_MODULE();
 
 RCT_EXPORT_METHOD(setupNotifyChangeOnSetText)
 {
-  Class class = [RCTTextView class];
-  method_exchangeImplementations(class_getInstanceMethod(class, @selector(setText:)), class_getInstanceMethod(class, @selector(my_setText:)));
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    Class class = [RCTTextView class];
+    method_exchangeImplementations(class_getInstanceMethod(class, @selector(setText:)), class_getInstanceMethod(class, @selector(my_setText:)));
+  });
 }
 
 @end
