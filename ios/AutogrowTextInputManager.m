@@ -21,7 +21,9 @@
   UITextView *textView = [self valueForKey:@"_textView"];
   if (textView != nil && [self respondsToSelector:@selector(textViewDidChange:)])
   {
-    [self textViewDidChange:textView];
+    dispatch_async(dispatch_get_main_queue(), ^{
+      [self textViewDidChange:textView];
+    });
   }
 }
 @end
