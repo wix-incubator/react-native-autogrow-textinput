@@ -21,7 +21,7 @@ class example extends Component {
         <Text style={styles.welcome}>
           Auto Growing TextInput Example
         </Text>
-        <AutoGrowingTextInput style={styles.textInput} placeholder={'Your Message'} ref={(r) => { this._textInput = r; }}/>
+        <AutoGrowingTextInput style={styles.textInput} placeholder={'Your Message'} maxHeight={200} ref={(r) => { this._textInput = r; }}/>
         <TouchableOpacity style={styles.button} onPress={() => this._resetTextInput()}>
           <Text>Clear</Text>
         </TouchableOpacity>

@@ -34,7 +34,11 @@ export default class AutoGrowingTextInput extends React.Component {
   }
 
   _getValidHeight(height) {
-    return Math.min(this.props.maxHeight, Math.max(this.props.minHeight, height));
+    const minCappedHeight = Math.max(this.props.minHeight, height);
+    if(this.props.maxHeight == null) {
+      return minCappedHeight;
+    }
+    return Math.min(this.props.maxHeight, minCappedHeight);
   }
 
   _onChangeNativeEvent(nativeEvent) {
@@ -79,6 +83,6 @@ AutoGrowingTextInput.defaultProps = {
   autoGrowing: true,
   minHeight: 35,
   initialHeight: 35,
-  maxHeight: 200,
+  maxHeight: null,
   animation: {animated: false, duration: DEFAULT_ANIM_DURATION}
 };
