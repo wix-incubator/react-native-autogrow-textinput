@@ -1,9 +1,10 @@
 
-import React, {
+import React, {Component, PropTypes} from 'react';
+
+import {
   View,
   TextInput,
   StyleSheet,
-  PropTypes,
   LayoutAnimation,
   NativeModules
 } from 'react-native';
