@@ -145,3 +145,6 @@ xcuserdata
 # Webstorm
 #
 .idea
+
+# Intellij
+*.iml
