@@ -18,26 +18,30 @@ const DEFAULT_ANIM_DURATION = 100;
 export default class AutoGrowingTextInput extends React.Component {
   constructor(props) {
     super(props);
-  
+
     // using a JS fix for "onChange" not received on Android when the text is set pragmatically and not by the user
     // a hidden Text is used to measure the height in case it's received via the value prop
     this.state = {height: this._getValidHeight(props.initialHeight),
                   androidHacksHiddenText: props.value || '',
                   androidHacksSetHeightFromHiddenLayout: true};
-    
+
     // using a native fix for "onChange" not received on iOS when the text is set pragmatically and not by the user
     // (https://github.com/wix/react-native-autogrow-textinput/issues/1)
     if(AutoGrowTextInputManager) {
       AutoGrowTextInputManager.setupNotifyChangeOnSetText();
     }
   }
-  
+
+  componentDidMount() {
+    this.props.inputRef && this.props.inputRef(this._textInput);
+  }
+
   componentWillReceiveProps(props) {
     if(Platform.OS === 'android') {
       this._handleAndroidHackProps(props);
     }
   }
-  
+
   _renderAutoGrowingTextInput() {
     return (
       <TextInput multiline={true}
@@ -53,7 +57,7 @@ export default class AutoGrowingTextInput extends React.Component {
       />
     );
   }
-  
+
   render() {
     if(Platform.OS === 'ios') {
       return this._renderAutoGrowingTextInput();
@@ -91,7 +95,7 @@ export default class AutoGrowingTextInput extends React.Component {
 
   setNativeProps(nativeProps = {}) {
     this._textInput.setNativeProps(nativeProps);
-    
+
     if(Platform.OS === 'android') {
       this._handleAndroidHackProps({value: nativeProps.text}, true);
     }
@@ -102,15 +106,15 @@ export default class AutoGrowingTextInput extends React.Component {
       height: this.props.minHeight
     });
   }
-  
+
   /*
      Android Hacks
    */
-  
+
   _resetAndroidHacks(text = '') {
     this.setState({androidHacksHiddenText: text, androidHacksSetHeightFromHiddenLayout: true});
   }
-  
+
   _handleAndroidHackProps(props, forceUpdate = false) {
     if(!props.value) {
       this._resetAndroidHacks();
@@ -118,7 +122,7 @@ export default class AutoGrowingTextInput extends React.Component {
       this.setState({androidHacksHiddenText: props.value, androidHacksSetHeightFromHiddenLayout: true});
     }
   }
-  
+
   _renderAutoGrowingTextInputAndroidHack() {
     return (
       <View style={{flex: 1}}>
@@ -168,6 +172,7 @@ var styles = StyleSheet.create({
 
 AutoGrowingTextInput.propTypes = {
   autoGrowing: PropTypes.bool,
+  inputRef: PropTypes.func,
   initialHeight: PropTypes.number,
   minHeight: PropTypes.number,
   maxHeight: PropTypes.number,
