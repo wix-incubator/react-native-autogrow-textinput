@@ -102,6 +102,18 @@ export default class AutoGrowingTextInput extends React.Component {
       height: this.props.minHeight
     });
   }
+
+  clear() {
+    return this._textInput.clear();
+  }
+
+  focus() {
+    return this._textInput.focus();
+  }
+
+  isFocused() {
+    return this._textInput.isFocused();
+  }
   
   /*
      Android Hacks
