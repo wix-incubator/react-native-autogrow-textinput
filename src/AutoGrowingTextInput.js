@@ -107,6 +107,10 @@ export default class AutoGrowingTextInput extends React.Component {
     return this._textInput.clear();
   }
 
+  focus() {
+    return this._textInput.focus();
+  }
+
   isFocused() {
     return this._textInput.isFocused();
   }
