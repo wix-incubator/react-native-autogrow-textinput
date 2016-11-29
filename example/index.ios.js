@@ -16,18 +16,33 @@ import {
 import {AutoGrowingTextInput} from 'react-native-autogrow-textinput';
 
 class example extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {textValue: 'My initial\nText'};
+  }
+
   render() {
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>
           Auto Growing TextInput Example
         </Text>
-        <AutoGrowingTextInput style={styles.textInput} placeholder={'Your Message'} maxHeight={200} ref={(r) => { this._textInput = r; }}/>
+        <AutoGrowingTextInput value={this.state.textValue}
+                              onChange={(event) => this._onChange(event)}
+                              style={styles.textInput}
+                              placeholder={'Your Message'}
+                              maxHeight={200}
+                              ref={(r) => { this._textInput = r; }}
+        />
         <TouchableOpacity style={styles.button} onPress={() => this._resetTextInput()}>
           <Text>Clear</Text>
         </TouchableOpacity>
       </View>
     );
+  }
+
+  _onChange(event) {
+    this.setState({ textValue: event.nativeEvent.text || '' });
   }
 
   _resetTextInput() {
@@ -48,7 +63,6 @@ const styles = StyleSheet.create({
     margin: 10
   },
   textInput: {
-    height: 35,
     margin: 10,
     paddingLeft: 10,
     fontSize: 17,

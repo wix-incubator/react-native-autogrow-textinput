@@ -6,59 +6,77 @@ import {
   TextInput,
   StyleSheet,
   LayoutAnimation,
-  NativeModules,
   Platform,
-  Text
 } from 'react-native';
 
-var AutoGrowTextInputManager = NativeModules.AutoGrowTextInputManager;
+const ANDROID_PLATFORM = (Platform.OS === 'android');
 
 const DEFAULT_ANIM_DURATION = 100;
 
-export default class AutoGrowingTextInput extends React.Component {
+export default class AutoGrowingTextInput extends Component {
   constructor(props) {
     super(props);
-  
-    // using a JS fix for "onChange" not received on Android when the text is set pragmatically and not by the user
-    // a hidden Text is used to measure the height in case it's received via the value prop
-    this.state = {height: this._getValidHeight(props.initialHeight),
-                  androidHacksHiddenText: props.value || '',
-                  androidHacksSetHeightFromHiddenLayout: true};
-    
-    // using a native fix for "onChange" not received on iOS when the text is set pragmatically and not by the user
-    // (https://github.com/wix/react-native-autogrow-textinput/issues/1)
-    if(AutoGrowTextInputManager) {
-      AutoGrowTextInputManager.setupNotifyChangeOnSetText();
-    }
+
+    this.state = {
+      height: this._getValidHeight(props.initialHeight),
+      androidFirstContentSizeChange: true
+    };
   }
-  
-  componentWillReceiveProps(props) {
-    if(Platform.OS === 'android') {
-      this._handleAndroidHackProps(props);
-    }
-  }
-  
-  _renderAutoGrowingTextInput() {
+
+  _renderTextInput() {
     return (
-      <TextInput multiline={true}
-                 {...this.props} {...this.style}
-                 style={[this.props.style, {height: this._getValidHeight(this.state.height)}]}
-                 onChange={(event) => {
-                   this._onChangeNativeEvent(event.nativeEvent);
-                   if (this.props.onChange) {
-                     this.props.onChange(event);
-                   }
-                 }}
-                 ref={(r) => { this._textInput = r; }}
+      <TextInput
+        multiline={true}
+        {...this.props} {...this.style}
+        style={[this.props.style, {height: this._getValidHeight(this.state.height)}]}
+        onContentSizeChange={(event) => this._onContentSizeChange(event)}
+        onChange={(event) => this._onChange(event)}
+        ref={(r) => { this._textInput = r; }}
       />
     );
   }
-  
+
   render() {
-    if(Platform.OS === 'ios') {
-      return this._renderAutoGrowingTextInput();
+    if(ANDROID_PLATFORM) {
+      return (
+        <View style={{flexDirection: 'row'}}>
+          <View style={{flex: 1}}>
+            { this._renderTextInput() }
+          </View>
+        </View>
+      );
     } else {
-      return this._renderAutoGrowingTextInputAndroidHack();
+      return this._renderTextInput();
+    }
+  }
+
+  /*
+   TextInput onContentSizeChange should fix the issue with "initial value doesn't receive change event"
+   While this works perfectly on iOS, on Android you only get it on the first time the component is displayed..
+   So on Android a height update for the initial value is performed in `onContentSizeChange`, but the rest
+   of the updates are still performed via `onChange` as it was before
+   using a flag (androidFirstContentSizeChange) to pervent multiple updates in case both notifications works simultaniously in some cases
+   */
+  _onContentSizeChange(event) {
+    if(ANDROID_PLATFORM) {
+      if(!this.state.androidFirstContentSizeChange) {
+        return;
+      }
+      this.setState({androidFirstContentSizeChange: false});
+    }
+    this._handleNativeEvent(event.nativeEvent);
+
+    if (this.props.onContentSizeChange) {
+      this.props.onContentSizeChange(event);
+    }
+  }
+
+  _onChange(event) {
+    if(ANDROID_PLATFORM && !this.state.androidFirstContentSizeChange) {
+      this._handleNativeEvent(event.nativeEvent);
+    }
+    if (this.props.onChange) {
+      this.props.onChange(event);
     }
   }
 
@@ -70,7 +88,7 @@ export default class AutoGrowingTextInput extends React.Component {
     return Math.min(this.props.maxHeight, minCappedHeight);
   }
 
-  _onChangeNativeEvent(nativeEvent) {
+  _handleNativeEvent(nativeEvent) {
     let newHeight = this.state.height;
     if (nativeEvent.contentSize && this.props.autoGrowing) {
       newHeight = nativeEvent.contentSize.height;
@@ -91,10 +109,6 @@ export default class AutoGrowingTextInput extends React.Component {
 
   setNativeProps(nativeProps = {}) {
     this._textInput.setNativeProps(nativeProps);
-    
-    if(Platform.OS === 'android') {
-      this._handleAndroidHackProps({value: nativeProps.text}, true);
-    }
   }
 
   resetHeightToMin() {
@@ -113,57 +127,6 @@ export default class AutoGrowingTextInput extends React.Component {
 
   isFocused() {
     return this._textInput.isFocused();
-  }
-  
-  /*
-     Android Hacks
-   */
-  
-  _resetAndroidHacks(text = '') {
-    this.setState({androidHacksHiddenText: text, androidHacksSetHeightFromHiddenLayout: true});
-  }
-  
-  _handleAndroidHackProps(props, forceUpdate = false) {
-    if(!props.value) {
-      this._resetAndroidHacks();
-    } else if(this.state.androidHacksHiddenText !== props.value && (this.state.androidHacksSetHeightFromHiddenLayout || forceUpdate)) {
-      this.setState({androidHacksHiddenText: props.value, androidHacksSetHeightFromHiddenLayout: true});
-    }
-  }
-  
-  _renderAutoGrowingTextInputAndroidHack() {
-    return (
-      <View style={{flex: 1}}>
-        <TextInput multiline={true}
-                   {...this.props} {...this.style}
-                   style={[this.props.style, {height: this._getValidHeight(this.state.height)}]}
-                   onChange={(event) => {
-                     if(this.state.androidHacksSetHeightFromHiddenLayout) {
-                       this.setState({androidHacksHiddenText: event.nativeEvent.text});
-                     } else {
-                       this._onChangeNativeEvent(event.nativeEvent);
-                       if (this.props.onChange) {
-                         this.props.onChange(event);
-                       }
-                     }
-                   }}
-                   ref={(r) => { this._textInput = r; }}
-        />
-        <Text style={[this.props.style, styles.hiddenOffScreen]}
-              onLayout={(event) => {
-                if(this.state.androidHacksSetHeightFromHiddenLayout) {
-                  event.nativeEvent = {contentSize: {height: event.nativeEvent.layout.height, width: event.nativeEvent.layout.width}, text: this.state.androidHacksHiddenText};
-                  this._onChangeNativeEvent(event.nativeEvent);
-                  if (this.props.onChange) {
-                    this.props.onChange(event);
-                  }
-                  this.setState({androidHacksSetHeightFromHiddenLayout: false});
-                }
-              }}>
-          {this.state.androidHacksHiddenText}
-        </Text>
-      </View>
-    );
   }
 }
 

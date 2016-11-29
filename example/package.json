@@ -6,8 +6,8 @@
     "start": "react-native start"
   },
   "dependencies": {
-    "react-native": "0.25.1",
-    "react": "0.14.5",
+    "react-native": "0.38.0",
+    "react": "15.4.1",
     "react-native-autogrow-textinput": "latest"
   }
 }
