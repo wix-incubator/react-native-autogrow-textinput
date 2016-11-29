@@ -39,7 +39,7 @@ export default class AutoGrowingTextInput extends Component {
   render() {
     if(ANDROID_PLATFORM) {
       return (
-        <View style={{flexDirection: 'row'}}>
+        <View style={{flex: 1, flexDirection: 'row'}}>
           <View style={{flex: 1}}>
             { this._renderTextInput() }
           </View>
