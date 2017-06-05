@@ -1,21 +1,17 @@
-
 import React, {Component, PropTypes} from 'react';
-
-import {
-  View,
-  TextInput,
-  StyleSheet,
-  LayoutAnimation,
-  Platform,
-} from 'react-native';
+import {View, TextInput, LayoutAnimation, Platform} from 'react-native';
 
 const ANDROID_PLATFORM = (Platform.OS === 'android');
-
 const DEFAULT_ANIM_DURATION = 100;
 
 export default class AutoGrowingTextInput extends Component {
   constructor(props) {
     super(props);
+
+    this._onContentSizeChangeAndroid = this._onContentSizeChangeAndroid.bind(this);
+    this._onChangeAndroid = this._onChangeAndroid.bind(this);
+    this._onChangeIOS = this._onChangeIOS.bind(this);
+    this._onContentSizeChangeIOS = this._onContentSizeChangeIOS.bind(this);
 
     this.state = {
       height: this._getValidHeight(props.initialHeight),
@@ -23,31 +19,36 @@ export default class AutoGrowingTextInput extends Component {
     };
   }
 
-  _renderTextInput() {
+  _renderTextInputAndroid() {
     return (
+      <View style={{flex: 1, flexDirection: 'row'}}>
       <TextInput
         multiline={true}
         {...this.props} {...this.style}
-        style={[this.props.style, {height: this._getValidHeight(this.state.height)}]}
-        onContentSizeChange={(event) => this._onContentSizeChange(event)}
-        onChange={(event) => this._onChange(event)}
+        style={[this.props.style, {height: this._getValidHeight(this.state.height), flex: 1}]}
+        onContentSizeChange={this._onContentSizeChangeAndroid}
+        onChange={this._onChangeAndroid}
+        ref={(r) => { this._textInput = r; }}
+      />
+      </View>
+    );
+  }
+
+  _renderTextInputIOS() {
+    return (
+      <TextInput
+        multiline={true}
+        {...this.props}
+        style={[this.props.style, {height: 'auto'}]}
+        onContentSizeChange={this._onContentSizeChangeIOS}
+        onChange={this._onChangeIOS}
         ref={(r) => { this._textInput = r; }}
       />
     );
   }
 
   render() {
-    if(ANDROID_PLATFORM) {
-      return (
-        <View style={{flex: 1, flexDirection: 'row'}}>
-          <View style={{flex: 1}}>
-            { this._renderTextInput() }
-          </View>
-        </View>
-      );
-    } else {
-      return this._renderTextInput();
-    }
+    return ANDROID_PLATFORM ? this._renderTextInputAndroid() : this._renderTextInputIOS();
   }
 
   /*
@@ -57,25 +58,35 @@ export default class AutoGrowingTextInput extends Component {
    of the updates are still performed via `onChange` as it was before
    using a flag (androidFirstContentSizeChange) to pervent multiple updates in case both notifications works simultaniously in some cases
    */
-  _onContentSizeChange(event) {
-    if(ANDROID_PLATFORM) {
-      if(!this.state.androidFirstContentSizeChange) {
-        return;
-      }
+  _onContentSizeChangeAndroid(event) {
+    if(this.state.androidFirstContentSizeChange) {
       this.setState({androidFirstContentSizeChange: false});
+      this._handleNativeEvent(event.nativeEvent);
     }
-    this._handleNativeEvent(event.nativeEvent);
-
     if (this.props.onContentSizeChange) {
       this.props.onContentSizeChange(event);
     }
   }
 
-  _onChange(event) {
-    if(ANDROID_PLATFORM && !this.state.androidFirstContentSizeChange) {
+  _onChangeAndroid(event) {
+    if(!this.state.androidFirstContentSizeChange) {
       this._handleNativeEvent(event.nativeEvent);
     }
     if (this.props.onChange) {
+      this.props.onChange(event);
+    }
+  }
+
+  _onContentSizeChangeIOS(event) {
+    if(this.props.onContentSizeChange) {
+      this.props.onContentSizeChange(event);
+    }
+  }
+
+  _onChangeIOS(event) {
+    this._animateIfNecessary();
+
+    if(this.props.onChange) {
       this.props.onChange(event);
     }
   }
@@ -88,6 +99,13 @@ export default class AutoGrowingTextInput extends Component {
     return Math.min(this.props.maxHeight, minCappedHeight);
   }
 
+  _animateIfNecessary() {
+    if (this.props.animation.animated) {
+      const duration = this.props.animation.duration || DEFAULT_ANIM_DURATION;
+      LayoutAnimation.configureNext({...LayoutAnimation.Presets.easeInEaseOut, duration: duration});
+    }
+  }
+
   _handleNativeEvent(nativeEvent) {
     let newHeight = this.state.height;
     if (nativeEvent.contentSize && this.props.autoGrowing) {
@@ -97,14 +115,8 @@ export default class AutoGrowingTextInput extends Component {
       }
     }
 
-    if (this.props.animation.animated) {
-      const duration = this.props.animation.duration || DEFAULT_ANIM_DURATION;
-      LayoutAnimation.configureNext({...LayoutAnimation.Presets.easeInEaseOut, duration: duration});
-    }
-
-    this.setState({
-      height: newHeight
-    });
+    this._animateIfNecessary();
+    this.setState({height: newHeight});
   }
 
   setNativeProps(nativeProps = {}) {
@@ -112,9 +124,7 @@ export default class AutoGrowingTextInput extends Component {
   }
 
   resetHeightToMin() {
-    this.setState({
-      height: this.props.minHeight
-    });
+    this.setState({height: this.props.minHeight});
   }
 
   clear() {
@@ -129,17 +139,6 @@ export default class AutoGrowingTextInput extends Component {
     return this._textInput.isFocused();
   }
 }
-
-var styles = StyleSheet.create({
-  hiddenOffScreen: {
-    position: 'absolute',
-    top: 5000,
-    left: 5000,
-    backgroundColor: 'transparent',
-    borderColor: 'transparent',
-    color: 'transparent'
-  }
-});
 
 AutoGrowingTextInput.propTypes = {
   autoGrowing: PropTypes.bool,
