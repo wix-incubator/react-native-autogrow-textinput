@@ -38,6 +38,38 @@ NSUInteger const kMaxDeferedGetScrollView = 15;
     });
   }
 }
+
+@dynamic myEventDispatcher;
+
+- (instancetype)my_initWithEventDispatcher:(RCTEventDispatcher *)eventDispatcher
+{
+    RCTTextView* textView = [self my_initWithEventDispatcher:eventDispatcher];
+    textView.myEventDispatcher = eventDispatcher;
+    return textView;
+}
+
+- (void)setMyEventDispatcher:(id)object {
+     objc_setAssociatedObject(self, @selector(myEventDispatcher), object, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (id)myEventDispatcher {
+    return objc_getAssociatedObject(self, @selector(myEventDispatcher));
+}
+
+- (BOOL) my_textView:(RCTUITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
+{
+    [self my_textView:textView shouldChangeTextInRange:range replacementText:text];
+
+    NSDictionary* body = @{
+        @"target": self.reactTag,
+        @"rangeStart": @(range.location),
+        @"rangeEnd": @(range.location + range.length),
+        @"text": text,
+    };
+
+    [self.myEventDispatcher sendInputEventWithName:@"rangeChange" body:body];
+}
+
 @end
 
 @interface AutoGrowTextInputManager ()
@@ -68,6 +100,8 @@ RCT_EXPORT_METHOD(setupNotifyChangeOnSetText)
   dispatch_once(&onceToken, ^{
     Class class = [RCTTextView class];
     method_exchangeImplementations(class_getInstanceMethod(class, @selector(setText:)), class_getInstanceMethod(class, @selector(my_setText:)));
+    method_exchangeImplementations(class_getInstanceMethod(class, @selector(textView:shouldChangeTextInRange:replacementText:)), class_getInstanceMethod(class, @selector(my_textView:shouldChangeTextInRange:replacementText:)));
+    method_exchangeImplementations(class_getInstanceMethod(class, @selector(initWithEventDispatcher:)), class_getInstanceMethod(class, @selector(my_initWithEventDispatcher:)));
   });
 }
 
