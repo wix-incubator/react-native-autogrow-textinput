@@ -4,7 +4,7 @@
     "type": "git",
     "url": "https://github.com/rehashstudio/react-native-autogrow-textinput.git"
   },
-  "version": "4.1.1",
+  "version": "4.1.2",
   "description": "React Native auto-growing multiline text input",
   "nativePackage": true,
   "bugs": {
