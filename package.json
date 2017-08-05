@@ -1,13 +1,10 @@
 {
-  "name": "react-native-autogrow-textinput",
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
-  },
+  "name": "@hero/react-native-autogrow-textinput",
   "repository": {
     "type": "git",
-    "url": "https://github.com/wix/react-native-autogrow-textinput.git"
+    "url": "https://github.com/rehashstudio/react-native-autogrow-textinput.git"
   },
-  "version": "4.1.0",
+  "version": "4.1.1",
   "description": "React Native auto-growing multiline text input",
   "nativePackage": true,
   "bugs": {
