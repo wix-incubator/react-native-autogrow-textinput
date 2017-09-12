@@ -33,9 +33,10 @@ NSUInteger const kMaxDeferedGetScrollView = 15;
   UITextView *textView = [self valueForKey:@"_textView"];
   if (textView != nil && [self respondsToSelector:@selector(textViewDidChange:)])
   {
-    dispatch_async(dispatch_get_main_queue(), ^{
-      [self textViewDidChange:textView];
-    });
+    // see https://github.com/wix/react-native-autogrow-textinput/issues/31#issuecomment-327802356
+    // dispatch_async(dispatch_get_main_queue(), ^{
+    //   [self textViewDidChange:textView];
+    // });
   }
 }
 @end
