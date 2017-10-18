@@ -148,3 +148,5 @@ xcuserdata
 
 # Intellij
 *.iml
+
+node_modules
