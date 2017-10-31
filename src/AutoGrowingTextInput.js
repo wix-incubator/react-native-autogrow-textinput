@@ -44,7 +44,7 @@ export default class AutoGrowingTextInput extends Component {
   }
 
   shouldApplyNativeIOSSettings() {
-    return IOS_PLATFORM && AutoGrowTextInputManager && (this.props.disableScrollAndBounceIOS || this.props.enableScrollToCaretIOS);
+    return AutoGrowTextInputManager && (this.props.disableScrollAndBounceIOS || this.props.enableScrollToCaretIOS);
   }
 
   textInputReactTag() {
