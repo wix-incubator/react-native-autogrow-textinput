@@ -31,6 +31,8 @@ public class AutoGrowTextInputModule extends ReactContextBaseJavaModule {
     private View mScrollParent;
     private ReactEditText editText;
     private int mTopOffset = 0;
+    private int mMaxHeight = Integer.MAX_VALUE;
+    private boolean mHasScrollParent = false;
     public AutoGrowTextInputModule(ReactApplicationContext reactContext) {
         super(reactContext);
     }
@@ -41,48 +43,45 @@ public class AutoGrowTextInputModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void applySettingsForInput(final Integer tag, ReadableMap param) {
-        Log.d("AutoGrow","applySettingsForInput was called on android! tag: " + tag);
+    public void applySettingsForInput(final Integer tag,final ReadableMap param) {
+
+        Log.d("AutoGrow","applySettingsForInput was called on android! has enableScrollToCaret: " + param.hasKey("enableScrollToCaret"));
         mTopOffset = 0;
         ReactApplicationContext reactContext = this.getReactApplicationContext();
         UIManagerModule uiManager = reactContext.getNativeModule(UIManagerModule.class);
         uiManager.addUIBlock(new UIBlock() {
             public void execute (NativeViewHierarchyManager nvhm) {
                 editText = (ReactEditText) nvhm.resolveView(tag);
-
-                findReactRoot(editText).getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
-                        Log.d("AutoGrow","onGlobalLayout! view top = " + editText.getTop());
-                    }
-                });
+                if (param.hasKey("maxHeight") && !param.isNull("maxHeight")) {
+                    mMaxHeight = dpToPx(param.getDouble("maxHeight"));
+                }
                 editText.setBlurOnSubmit(false);
-                editText.setOverScrollMode(View.OVER_SCROLL_NEVER);
-                editText.setScrollContainer(false);
+//                editText.setOverScrollMode(View.OVER_SCROLL_NEVER);
+//                editText.setScrollContainer(false);
                 editText.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
-                        Log.d("AutoGrow","onTouch! canScrollDown = " + v.canScrollVertically(1)
-                        + " canScrollUp = " + v.canScrollVertically(-1));
+
                         v.getParent().requestDisallowInterceptTouchEvent(false);
                         return false;
                     }
                 });
-                Log.d("AutoGrow","view pad = " + editText.getPaddingTop());
 
-                editText.setBackgroundColor(Color.CYAN);
                 editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                     @Override
                     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                        Log.d("AutoGrow","onEditorAction actionId = " + actionId);
-                        if ((actionId & EditorInfo.IME_MASK_ACTION) > 0 ||
-                                actionId == EditorInfo.IME_NULL) {
-                            Log.d("AutoGrow","onEditorAction got enter action!");
-                        }
+//                        Log.d("AutoGrow","onEditorAction actionId = " + actionId);
+//                        if ((actionId & EditorInfo.IME_MASK_ACTION) > 0 ||
+//                                actionId == EditorInfo.IME_NULL) {
+//                            Log.d("AutoGrow","onEditorAction got enter action!");
+//                        }
                         return false;
                     }
                 });
-                editText.addTextChangedListener(mWatcher);
+
+                if (param.hasKey("enableScrollToCaret") && param.getBoolean("enableScrollToCaret")) {
+                    editText.addTextChangedListener(mWatcher);
+                }
 
 //                editText.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
 //                    @Override
@@ -106,18 +105,28 @@ public class AutoGrowTextInputModule extends ReactContextBaseJavaModule {
         });
     }
 
+    private int dpToPx(double dp) {
+        return (int) (dp * editText.getResources().getDisplayMetrics().density);
+    }
+
     private void scrollToCaret() {
         if (mScrollParent == null) {
-            mScrollParent = findScrollParent(editText);
-        }
-        int caretY = getCaretY() + mTopOffset - mScrollParent.getScrollY();
-        int offset = caretY - mScrollParent.getBottom();
 
-//                        Log.d("AutoGrow","onLayoutChange scroll = " + mScrollParent.getScrollY());
-//                        Log.d("AutoGrow","onLayoutChange caretY = " + caretY);
-//                        Log.d("AutoGrow","onLayoutChange parent bottom = " + mScrollParent.getBottom());
-        if (offset > 0) {
-            mScrollParent.scrollBy(0,offset);
+                mScrollParent = findScrollParent(editText);
+
+        }
+        if (mHasScrollParent || mScrollParent.getHeight() >= mMaxHeight) {
+            int caretY = getCaretY() + mTopOffset - mScrollParent.getScrollY();
+            int offset = caretY - mScrollParent.getHeight();
+
+//            Log.d("AutoGrow", "scrollToCaret scroll = " + mScrollParent.getScrollY());
+//            Log.d("AutoGrow", "scrollToCaret mTopOffset = " + mTopOffset + " pad = " + mScrollParent.getPaddingBottom());
+//            Log.d("AutoGrow", "scrollToCaret caretY = " + caretY + " h = " + mScrollParent.getHeight());
+//            Log.d("AutoGrow", "scrollToCaret parent bottom = " + mScrollParent.getBottom());
+
+            if (offset > 0) {
+                mScrollParent.scrollBy(0, offset);
+            }
         }
     }
 
@@ -133,19 +142,21 @@ public class AutoGrowTextInputModule extends ReactContextBaseJavaModule {
         return null;
     }
     private View findScrollParent(View v) {
-        mTopOffset += v.getTop();
-        while (v.getParent() != null) {
+        mTopOffset = v.getTop();
+        while (v.getParent() != null && v.getParent() instanceof View) {
             v = (View) v.getParent();
 
             Log.d("AutoGrow","has parent. top = " + v.getTop() + " pad = " + v.getPaddingTop());
             if (v.isScrollContainer()) {
                 Log.d("AutoGrow","has scroll parent. bottom = " + v.getBottom() + " pad = " + v.getPaddingTop());
+                mHasScrollParent = true;
                 return v;
             }
             mTopOffset += v.getTop();
         }
+        mTopOffset = 0;
         Log.d("AutoGrow","no scroll parent");
-        return null;
+        return editText;
     }
     private int getCaretY() {
         int pos = editText.getSelectionStart();
@@ -154,7 +165,7 @@ public class AutoGrowTextInputModule extends ReactContextBaseJavaModule {
         int baseline = layout.getLineBaseline(line);
 //        int ascent = layout.getLineAscent(line);
 //        float y = baseline + ascent;
-        int padBottom = 20;
+        int padBottom = editText.getPaddingBottom() + dpToPx(5f);
         return baseline + editText.getPaddingTop() + padBottom;
     }
     @ReactMethod
@@ -171,12 +182,14 @@ public class AutoGrowTextInputModule extends ReactContextBaseJavaModule {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            scrollToCaret();
+//            scrollToCaret();
         }
 
         @Override
         public void afterTextChanged(Editable s) {
-
+            scrollToCaret();
         }
     };
+
+
 }

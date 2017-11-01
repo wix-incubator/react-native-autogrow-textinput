@@ -28,7 +28,8 @@ export default class AutoGrowingTextInput extends Component {
       if (reactTag) {
         AutoGrowTextInputManager.applySettingsForInput(reactTag, {
           disableScrollAndBounce: this.props.disableScrollAndBounceIOS,
-          enableScrollToCaret: this.props.enableScrollToCaretIOS
+          enableScrollToCaret: this.props.enableScrollToCaretIOS,
+          maxHeight: this.props.maxHeight
         });
       }
     }
