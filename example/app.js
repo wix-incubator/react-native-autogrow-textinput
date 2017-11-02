@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {AppRegistry, StyleSheet, Text, View, TouchableOpacity, Platform,ScrollView} from 'react-native';
+import {AppRegistry, StyleSheet, Text, View, TouchableOpacity, Platform} from 'react-native';
 
 import {AutoGrowingTextInput} from 'react-native-autogrow-textinput';
 
@@ -12,7 +12,6 @@ class example extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <ScrollView style={{marginTop:30}}>
         <Text style={styles.welcome}>
           Auto Growing TextInput Example
         </Text>
@@ -23,16 +22,14 @@ class example extends Component {
             style={styles.textInput}
             placeholder={'Your Message'}
             placeholderTextColor='#66737C'
-            
+            maxHeight={200}
             minHeight={45}
-            enableScrollToCaretIOS
             ref={(r) => { this._textInput = r; }}
           />
           <TouchableOpacity style={styles.button} onPress={() => this._resetTextInput()}>
             <Text>Clear</Text>
           </TouchableOpacity>
         </View>
-      </ScrollView>
       </View>
     );
   }
