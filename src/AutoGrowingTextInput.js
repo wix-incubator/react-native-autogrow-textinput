@@ -2,7 +2,6 @@ import React, {Component, PropTypes} from 'react';
 import ReactNative, {View, TextInput, LayoutAnimation, Platform, NativeModules} from 'react-native';
 
 const ANDROID_PLATFORM = (Platform.OS === 'android');
-const IOS_PLATFORM = (Platform.OS === 'ios');
 const DEFAULT_ANIM_DURATION = 100;
 
 const AutoGrowTextInputManager = NativeModules.AutoGrowTextInputManager;
