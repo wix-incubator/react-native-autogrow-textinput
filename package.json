@@ -7,7 +7,7 @@
     "type": "git",
     "url": "https://github.com/wix/react-native-autogrow-textinput.git"
   },
-  "version": "4.1.1",
+  "version": "5.0.0",
   "description": "React Native auto-growing multiline text input",
   "nativePackage": true,
   "bugs": {
@@ -18,7 +18,10 @@
   "author": "Artal Druk <artald@wix.com>",
   "license": "MIT",
   "peerDependencies": {
-    "react-native": ">=0.38.0",
-    "react": ">=15.4.1"
+    "react-native": ">=0.50.0",
+    "react": ">=16.0.0"
+  },
+  "dependencies": {
+    "prop-types": "^15.6.0"
   }
 }
