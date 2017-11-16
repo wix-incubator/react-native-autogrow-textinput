@@ -24,6 +24,7 @@ class example extends Component {
             placeholderTextColor='#66737C'
             maxHeight={200}
             minHeight={45}
+            enableScrollToCaret
             ref={(r) => { this._textInput = r; }}
           />
           <TouchableOpacity style={styles.button} onPress={() => this._resetTextInput()}>

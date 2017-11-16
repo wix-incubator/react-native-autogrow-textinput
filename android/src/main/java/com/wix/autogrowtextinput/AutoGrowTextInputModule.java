@@ -85,11 +85,12 @@ public class AutoGrowTextInputModule extends ReactContextBaseJavaModule {
                 mScrollParent = findScrollParent(editText);
 
         }
-        if (mHasScrollParent || mScrollParent.getHeight() >= mMaxHeight) {
+        boolean isAtMaxHeight = mScrollParent.getHeight() >= mMaxHeight;
+        if (mHasScrollParent || isAtMaxHeight) {
             int caretY = getCaretY() + mTopOffset - mScrollParent.getScrollY();
             int offset = caretY - mScrollParent.getHeight();
-
-            if (offset > 0) {
+            if (offset > 0 || isAtMaxHeight) {
+                offset = Math.max(offset,-mScrollParent.getScrollY());
                 mScrollParent.scrollBy(0, offset);
             }
         }
