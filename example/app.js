@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {AppRegistry, StyleSheet, Text, View, TouchableOpacity, Platform} from 'react-native';
+import {AppRegistry, StyleSheet, Text, View, TouchableOpacity, Platform, findNodeHandle} from 'react-native';
 
 import {AutoGrowingTextInput} from 'react-native-autogrow-textinput';
 
