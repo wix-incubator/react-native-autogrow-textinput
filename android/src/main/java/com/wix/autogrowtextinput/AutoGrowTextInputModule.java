@@ -7,6 +7,7 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
+import android.content.Context;
 
 import com.facebook.react.ReactRootView;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -17,6 +18,7 @@ import com.facebook.react.uimanager.NativeViewHierarchyManager;
 import com.facebook.react.uimanager.UIBlock;
 import com.facebook.react.uimanager.UIManagerModule;
 import com.facebook.react.views.textinput.ReactEditText;
+import android.view.inputmethod.InputMethodManager;
 
 /**
  * Created by zachik on 14/09/2017.
@@ -145,6 +147,24 @@ public class AutoGrowTextInputModule extends ReactContextBaseJavaModule {
             scrollToCaret();
         }
     };
+
+
+    // Props to https://github.com/MattFoley for this temporary hack
+    // https://github.com/facebook/react-native/pull/12462#issuecomment-298812731
+    @ReactMethod
+    public void resetKeyboardInput(final int reactTagToReset) {
+        UIManagerModule uiManager = getReactApplicationContext().getNativeModule(UIManagerModule.class);
+        uiManager.addUIBlock(new UIBlock() {
+            @Override
+            public void execute(NativeViewHierarchyManager nativeViewHierarchyManager) {
+                InputMethodManager imm = (InputMethodManager) getReactApplicationContext().getBaseContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (imm != null) {
+                    View viewToReset = nativeViewHierarchyManager.resolveView(reactTagToReset);
+                    imm.restartInput(viewToReset);
+                }
+            }
+        });
+    }
 
 
 }
