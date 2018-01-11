@@ -8,37 +8,12 @@
 
 #import "AutogrowTextInputManager.h"
 
-#if __has_include(<React/RCTTextView.h>)
-#import <React/RCTTextView.h>
 #import <React/RCTUIManager.h>
 #import <React/RCTScrollView.h>
-#else
-#import "RCTTextView.h"
-#import "RCTUIManager.h"
-#import "RCTScrollView.h"
-#endif
 
 #import <objc/runtime.h>
 
 NSUInteger const kMaxDeferedGetScrollView = 15;
-
-@interface RCTTextView(SetTextNotifyChange)
-@end
-
-@implementation RCTTextView(SetTextNotifyChange)
-- (void)my_setText:(NSString *)text
-{
-  [self my_setText:text];
-  
-  UITextView *textView = [self valueForKey:@"_textView"];
-  if (textView != nil && [self respondsToSelector:@selector(textViewDidChange:)])
-  {
-    dispatch_async(dispatch_get_main_queue(), ^{
-      [self textViewDidChange:textView];
-    });
-  }
-}
-@end
 
 @interface AutoGrowTextInputManager ()
 {
@@ -58,18 +33,7 @@ RCT_EXPORT_MODULE();
     return dispatch_get_main_queue();
 }
 
-
 #pragma mark - public API
-
-
-RCT_EXPORT_METHOD(setupNotifyChangeOnSetText)
-{
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    Class class = [RCTTextView class];
-    method_exchangeImplementations(class_getInstanceMethod(class, @selector(setText:)), class_getInstanceMethod(class, @selector(my_setText:)));
-  });
-}
 
 RCT_EXPORT_METHOD(applySettingsForInput:(nonnull NSNumber *)textInputReactTag settings:(NSDictionary*)settings)
 {
@@ -121,10 +85,9 @@ RCT_EXPORT_METHOD(performCleanupForInput:(nonnull NSNumber *)textInputReactTag)
 -(UITextView*)getTextViewForInput:(nonnull NSNumber *)textInputReactTag
 {
     UIView *_textView = [self.bridge.uiManager viewForReactTag:textInputReactTag];
-    if ([_textView isKindOfClass:[RCTTextView class]])
+    if ([_textView isKindOfClass:NSClassFromString(@"RCTTextView")])
     {
-        RCTTextView *textView = (RCTTextView *)_textView;
-        UITextView *uiTextView = [textView valueForKey:@"_textView"];
+        UITextView *uiTextView = [_textView valueForKey:@"_backedTextInput"];
         return uiTextView;
     }
     return nil;
