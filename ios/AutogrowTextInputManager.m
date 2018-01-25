@@ -14,6 +14,7 @@
 #import <objc/runtime.h>
 
 NSUInteger const kMaxDeferedGetScrollView = 15;
+NSUInteger const kAdditionalOffset = 5;
 
 @interface AutoGrowTextInputManager ()
 {
@@ -148,13 +149,19 @@ RCT_EXPORT_METHOD(performCleanupForInput:(nonnull NSNumber *)textInputReactTag)
         CGRect caretRect = [textView caretRectForPosition:textView.selectedTextRange.end];
         if(caretRect.size.width > 0 && caretRect.size.height > 0)
         {
+            CGFloat carretAdditionalSize = 0;
+            if (caretRect.origin.x == 0) {
+                carretAdditionalSize = caretRect.size.height;
+            }
+            
             caretRect = [scrollView convertRect:caretRect fromView:textView];
+            caretRect.origin.y += carretAdditionalSize;
             
             CGRect visibleRect = CGRectMake(0, scrollView.contentOffset.y, scrollView.frame.size.width, scrollView.frame.size.height - scrollView.contentInset.bottom);
-            if (!CGRectIntersectsRect(visibleRect, caretRect))
+            if (caretRect.origin.y + caretRect.size.height + kAdditionalOffset > visibleRect.size.height + visibleRect.origin.y)
             {
                 BOOL caretIsAboveVisibleRect = caretRect.origin.y + caretRect.size.height < visibleRect.origin.y;
-                CGFloat yOffset = caretIsAboveVisibleRect ? caretRect.origin.y - 3 : caretRect.origin.y - visibleRect.size.height + caretRect.size.height + 3;
+                CGFloat yOffset = caretIsAboveVisibleRect ? caretRect.origin.y - kAdditionalOffset : caretRect.origin.y - visibleRect.size.height + caretRect.size.height + kAdditionalOffset;
                 [scrollView setContentOffset:CGPointMake(scrollView.contentOffset.x, yOffset) animated:NO];
             }
         }
