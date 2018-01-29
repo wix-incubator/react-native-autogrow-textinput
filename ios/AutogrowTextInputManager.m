@@ -41,12 +41,6 @@ RCT_EXPORT_METHOD(applySettingsForInput:(nonnull NSNumber *)textInputReactTag se
     UITextView *uiTextView = [self getTextViewForInput:textInputReactTag];
     if (uiTextView != nil)
     {
-        if([settings[@"disableScrollAndBounce"] boolValue])
-        {
-            uiTextView.scrollEnabled = NO;
-            uiTextView.bounces = NO;
-        }
-        
         if([settings[@"enableScrollToCaret"] boolValue])
         {
             _deferedInitializeAccessoryViewsCount = 0;
