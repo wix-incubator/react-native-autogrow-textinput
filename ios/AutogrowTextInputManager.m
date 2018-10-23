@@ -80,10 +80,13 @@ RCT_EXPORT_METHOD(performCleanupForInput:(nonnull NSNumber *)textInputReactTag)
 -(UITextView*)getTextViewForInput:(nonnull NSNumber *)textInputReactTag
 {
     UIView *_textView = [self.bridge.uiManager viewForReactTag:textInputReactTag];
-    if ([_textView isKindOfClass:NSClassFromString(@"RCTTextView")])
+    if ([_textView isKindOfClass:NSClassFromString(@"RCTMultilineTextInputView")])
     {
-        UITextView *uiTextView = [_textView valueForKey:@"_backedTextInput"];
-        return uiTextView;
+        return [_textView valueForKey:@"_backedTextInputView"];
+    }
+    else if ([_textView isKindOfClass:NSClassFromString(@"RCTTextView")])
+    {
+        return [_textView valueForKey:@"_backedTextInput"];
     }
     return nil;
 }
