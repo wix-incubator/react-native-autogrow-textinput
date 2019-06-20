@@ -89,9 +89,11 @@ export default class AutoGrowingTextInput extends Component {
 
 AutoGrowingTextInput.propTypes = {
   ...TextInput.propTypes,
+  maxHeight: PropTypes.number,
   enableScrollToCaret: PropTypes.bool,
 };
 AutoGrowingTextInput.defaultProps = {
   ...TextInput.defaultProps,
+  maxHeight: 640,
   enableScrollToCaret: false,
 };
