@@ -5,7 +5,7 @@ Pod::Spec.new do |s|
   s.name          = package['name']
   s.version       = package["version"]
   s.summary       = package['description']
-  s.author        = { 'albertluo' => 'luozhang002@126.com' }
+  s.author        = { 'wix' => 'wix@qq.com' }
   s.license       = package['license']
   s.homepage      = package['homepage']
   s.source        = { :git => 'https://github.com/wix/react-native-autogrow-textinput.git' }
@@ -14,6 +14,5 @@ Pod::Spec.new do |s|
   s.source_files  = 'ios/*.{h,m}'
 
   s.dependency 'React'
-  s.dependency 'AliyunOSSiOS'
 
 end
