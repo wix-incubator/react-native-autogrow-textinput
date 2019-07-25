@@ -5,7 +5,7 @@ Pod::Spec.new do |s|
   s.name          = package['name']
   s.version       = package["version"]
   s.summary       = package['description']
-  s.author        = { 'wix' => 'wix@qq.com' }
+  s.author        = package['author']
   s.license       = package['license']
   s.homepage      = package['homepage']
   s.source        = { :git => 'https://github.com/wix/react-native-autogrow-textinput.git' }
