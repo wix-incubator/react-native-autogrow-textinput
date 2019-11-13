@@ -155,3 +155,5 @@ build/
 .idea
 .gradle
 local.properties
+android/.project
+android/.settings/*
