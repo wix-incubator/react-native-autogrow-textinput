@@ -84,16 +84,19 @@ public class AutoGrowTextInputModule extends ReactContextBaseJavaModule {
     private void scrollToCaret() {
         if (mScrollParent == null) {
 
-                mScrollParent = findScrollParent(editText);
+            mScrollParent = findScrollParent(editText);
 
         }
         boolean isAtMaxHeight = mScrollParent.getHeight() >= mMaxHeight;
         if (mHasScrollParent || isAtMaxHeight) {
-            int caretY = getCaretY() + mTopOffset - mScrollParent.getScrollY();
-            int offset = caretY - mScrollParent.getHeight();
-            if (offset > 0 || isAtMaxHeight) {
-                offset = Math.max(offset,-mScrollParent.getScrollY());
-                mScrollParent.scrollBy(0, offset);
+            Integer caretY = getCaretY();
+            if (caretY != null) {
+                caretY +=  mTopOffset - mScrollParent.getScrollY();
+                int offset = caretY - mScrollParent.getHeight();
+                if (offset > 0 || isAtMaxHeight) {
+                    offset = Math.max(offset, -mScrollParent.getScrollY());
+                    mScrollParent.scrollBy(0, offset);
+                }
             }
         }
     }
@@ -122,13 +125,17 @@ public class AutoGrowTextInputModule extends ReactContextBaseJavaModule {
         mTopOffset = 0;
         return editText;
     }
-    private int getCaretY() {
+    private Integer getCaretY() {
         int pos = editText.getSelectionStart();
         Layout layout = editText.getLayout();
-        int line = layout.getLineForOffset(pos);
-        int baseline = layout.getLineBaseline(line);
-        int padBottom = editText.getPaddingBottom() + dpToPx(5f);
-        return baseline + editText.getPaddingTop() + padBottom;
+        if (layout != null) {
+            int line = layout.getLineForOffset(pos);
+            int baseline = layout.getLineBaseline(line);
+            int padBottom = editText.getPaddingBottom() + dpToPx(5f);
+            return baseline + editText.getPaddingTop() + padBottom;
+        } else {
+            return null;
+        }
     }
     @ReactMethod
     public void performCleanupForInput(Integer tag) {
