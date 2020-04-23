@@ -11,13 +11,14 @@
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		688FCAB0C3D30D86BAE8659C /* libPods-AutogrowTextinput.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E1C1966D1A94D4DD0D784A71 /* libPods-AutogrowTextinput.a */; };
+		60848BF6FDFACC6A9DF1BE94 /* libPods-AutogrowTextinput.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E73A6D9FA68EE2DC1F483446 /* libPods-AutogrowTextinput.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* AutogrowTextinputTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AutogrowTextinputTests.m; sourceTree = "<group>"; };
+		10285A8CE437297AAF47F0A2 /* Pods-AutogrowTextinput.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AutogrowTextinput.release.xcconfig"; path = "Target Support Files/Pods-AutogrowTextinput/Pods-AutogrowTextinput.release.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* AutogrowTextinput.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AutogrowTextinput.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = AutogrowTextinput/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = AutogrowTextinput/AppDelegate.m; sourceTree = "<group>"; };
@@ -25,9 +26,8 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = AutogrowTextinput/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = AutogrowTextinput/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = AutogrowTextinput/main.m; sourceTree = "<group>"; };
-		3E7BEED7F78981D6ACDBEE64 /* Pods-AutogrowTextinput.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AutogrowTextinput.release.xcconfig"; path = "Target Support Files/Pods-AutogrowTextinput/Pods-AutogrowTextinput.release.xcconfig"; sourceTree = "<group>"; };
-		D3FBBD305EEE16B89ADCEC5E /* Pods-AutogrowTextinput.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AutogrowTextinput.debug.xcconfig"; path = "Target Support Files/Pods-AutogrowTextinput/Pods-AutogrowTextinput.debug.xcconfig"; sourceTree = "<group>"; };
-		E1C1966D1A94D4DD0D784A71 /* libPods-AutogrowTextinput.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AutogrowTextinput.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		17A2AF883A971BA72AEF27DC /* Pods-AutogrowTextinput.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AutogrowTextinput.debug.xcconfig"; path = "Target Support Files/Pods-AutogrowTextinput/Pods-AutogrowTextinput.debug.xcconfig"; sourceTree = "<group>"; };
+		E73A6D9FA68EE2DC1F483446 /* libPods-AutogrowTextinput.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AutogrowTextinput.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
@@ -37,7 +37,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				688FCAB0C3D30D86BAE8659C /* libPods-AutogrowTextinput.a in Frameworks */,
+				60848BF6FDFACC6A9DF1BE94 /* libPods-AutogrowTextinput.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -80,7 +80,7 @@
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
-				E1C1966D1A94D4DD0D784A71 /* libPods-AutogrowTextinput.a */,
+				E73A6D9FA68EE2DC1F483446 /* libPods-AutogrowTextinput.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -88,8 +88,8 @@
 		663BF964F3E669566E29FFD9 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				D3FBBD305EEE16B89ADCEC5E /* Pods-AutogrowTextinput.debug.xcconfig */,
-				3E7BEED7F78981D6ACDBEE64 /* Pods-AutogrowTextinput.release.xcconfig */,
+				17A2AF883A971BA72AEF27DC /* Pods-AutogrowTextinput.debug.xcconfig */,
+				10285A8CE437297AAF47F0A2 /* Pods-AutogrowTextinput.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -131,7 +131,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "AutogrowTextinput" */;
 			buildPhases = (
-				0C95DA55D9CFD868757B4472 /* [CP] Check Pods Manifest.lock */,
+				D30F090B8AA0DC01BF3C80C9 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
@@ -201,7 +201,7 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
-		0C95DA55D9CFD868757B4472 /* [CP] Check Pods Manifest.lock */ = {
+		D30F090B8AA0DC01BF3C80C9 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -271,7 +271,7 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D3FBBD305EEE16B89ADCEC5E /* Pods-AutogrowTextinput.debug.xcconfig */;
+			baseConfigurationReference = 17A2AF883A971BA72AEF27DC /* Pods-AutogrowTextinput.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
@@ -291,7 +291,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3E7BEED7F78981D6ACDBEE64 /* Pods-AutogrowTextinput.release.xcconfig */;
+			baseConfigurationReference = 10285A8CE437297AAF47F0A2 /* Pods-AutogrowTextinput.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
