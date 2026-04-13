@@ -1,3 +1,24 @@
+> [!WARNING]
+> This repository is archived and no longer maintained.
+> 
+> The functionality provided by `AutoGrowingTextInput` is now supported natively by the `TextField` component in [react-native-ui-lib](https://github.com/wix/react-native-ui-lib).
+> 
+> ## Migration
+> 
+> Replace `AutoGrowingTextInput` with `TextField` from `react-native-ui-lib`. The general use case is a multiline input with a maximum height:
+> 
+> ```jsx
+> import {TextField} from 'react-native-ui-lib';
+> 
+> <TextField
+>   multiline
+>   style={{maxHeight: 120}}
+>   placeholder="Your Message"
+> />
+> ```
+> 
+> This covers the auto-growing behaviour out of the box - the field expands as the user types and stops growing once it reaches `maxHeight`, at which point it becomes scrollable.
+
 # react-native-autogrow-textinput
 A helper component meant to be used as a drop-in replacement for RN TextInput to allow automatic expanding of a multi-line text input according to the number of lines.
 
